@@ -18,9 +18,14 @@ enum Task {
     TASK_2;
 
     private final String token = randomAlphanumeric(10);
+    private final String submitToken = randomAlphanumeric(10);
+
+    Long getId() {
+        return Long.valueOf(name().split("_")[1]);
+    }
 
     TaskRepresentation asRepresentation() {
-        return new TaskRepresentation(name(), getToken());
+        return new TaskRepresentation(name(), getToken(), getSubmitToken());
     }
 
     @Value
@@ -28,5 +33,6 @@ enum Task {
     static class TaskRepresentation {
         private final String name;
         private final String token;
+        private final String submitToken;
     }
 }

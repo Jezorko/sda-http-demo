@@ -37,6 +37,9 @@ public class DemoWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
             .authenticated()
             .and()
             .httpBasic()
-            .authenticationEntryPoint(authenticationEntryPoint);
+            .authenticationEntryPoint(authenticationEntryPoint)
+            .and()
+            .csrf()
+            .disable();
     }
 }
