@@ -1,0 +1,20 @@
+server:
+    port: 8080
+spring:
+    application:
+        name: sda-http-demo
+    profiles:
+      active: demo
+    datasource:
+        driverClassName: org.h2.Driver
+        username: sda
+        password: ''
+        url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: create
+        show-sql: true
+client:
+    username: sda
+    password: demo
