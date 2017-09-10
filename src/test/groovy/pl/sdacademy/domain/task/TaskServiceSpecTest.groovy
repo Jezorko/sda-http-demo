@@ -2,10 +2,12 @@ package pl.sdacademy.domain.task
 
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception
 import pl.sdacademy.domain.shared.exceptions.NotFound404Exception
+import pl.sdacademy.domain.task.dto.request.SubmitTaskRequest
 import rx.Observable
 import spock.lang.Specification
 
 import static pl.sdacademy.domain.task.Task.TASK_1
+import static pl.sdacademy.domain.task.Task.TASK_2
 import static rx.Observable.just
 
 class TaskServiceSpecTest extends Specification {
@@ -70,6 +72,46 @@ class TaskServiceSpecTest extends Specification {
         1 * taskDescriptionResolver.resolveMessageFor(_ as Observable) >> { Observable o -> o.toBlocking().single() }
 
         and:
+        thrown BadRequest400Exception
+    }
+
+    def "should return next task data if current task token and submission token is valid"() {
+        given:
+        def taskId = 1L
+        def taskToken = TASK_1.token
+        def submitToken = TASK_1.submitToken
+
+        when:
+        def result = taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+
+        then:
+        2L == result.nextTaskId
+        TASK_2.token == result.nextTaskToken
+    }
+
+    def "should throw 400 bad request exception if current task token is invalid"() {
+        given:
+        def taskId = 1L
+        def taskToken = ""
+        def submitToken = TASK_2.token
+
+        when:
+        taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+
+        then:
+        thrown BadRequest400Exception
+    }
+
+    def "should throw 400 bad request exception if submission token is invalid"() {
+        given:
+        def taskId = 1L
+        def taskToken = TASK_1.token
+        def submitToken = ""
+
+        when:
+        taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+
+        then:
         thrown BadRequest400Exception
     }
 
