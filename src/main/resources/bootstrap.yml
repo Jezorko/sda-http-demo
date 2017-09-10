@@ -18,3 +18,4 @@ spring:
 client:
     username: sda
     password: demo
+    default-locale: en

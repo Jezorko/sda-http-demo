@@ -12,4 +12,5 @@ import org.springframework.stereotype.Component;
 public class ClientProperties {
     private String username;
     private String password;
+    private String defaultLocale;
 }

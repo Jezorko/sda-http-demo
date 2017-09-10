@@ -22,11 +22,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Dalston.SR1</spring-cloud.version>
+        <spring-cloud.version>Dalston.SR3</spring-cloud.version>
 
+        <jackson.databind.version>2.5.0</jackson.databind.version>
+        <rxjava.version>1.2.7</rxjava.version>
         <commons.lang.version>3.0</commons.lang.version>
+        <commons.codec.version>1.10</commons.codec.version>
         <spock-spring.version>1.0-groovy-2.4</spock-spring.version>
         <cglib.version>3.2.4</cglib.version>
+
+        <surefire.version>2.18.1</surefire.version>
+        <gmavenplus.version>1.5</gmavenplus.version>
     </properties>
 
     <dependencies>
@@ -58,9 +64,24 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>${rxjava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
         </dependency>
 
         <dependency>
@@ -104,15 +125,21 @@
     </dependencyManagement>
 
     <build>
+        <finalName>sda-http-demo</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.5</version>
+                <version>${gmavenplus.version}</version>
                 <executions>
                     <execution>
                         <goals>

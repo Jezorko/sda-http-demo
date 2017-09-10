@@ -31,7 +31,7 @@ public class DemoWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
     @SneakyThrows
     protected void configure(HttpSecurity http) {
         http.authorizeRequests()
-            .antMatchers("/tasks")
+            .antMatchers("/tasks/**")
             .permitAll()
             .anyRequest()
             .authenticated()
