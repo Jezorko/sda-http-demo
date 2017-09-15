@@ -55,7 +55,7 @@ class TaskService {
                                                           .orElseThrow(() -> new BadRequest400Exception(BAD_SUBMIT_TOKEN));
     }
 
-    Observable<GetTaskResponse> getTask(Long taskId, String taskToken) {
+    public Observable<GetTaskResponse> getTask(Long taskId, String taskToken) {
         log.info("Request for task with ID={} and token={}", taskId, shortHash(taskToken));
         return zip(just(taskId),
                    taskDescriptionResolver.resolveMessageFor(zip(just(taskId),

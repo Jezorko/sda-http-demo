@@ -16,12 +16,12 @@ import static rx.Observable.just;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-class CreateUserService {
+public class CreateUserService {
 
     private final UserRepository userRepository;
     private final DigestUtil digestUtil;
 
-    void createUser(CreateUserRequest request) {
+    public void createUser(CreateUserRequest request) {
         just(request).map(CreateUserRequest::getUsername)
                      .map(userRepository::getByUsername)
                      .filter(Objects::nonNull)
