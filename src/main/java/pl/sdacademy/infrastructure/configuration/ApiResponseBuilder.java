@@ -20,24 +20,20 @@ import static rx.Observable.zip;
 class ApiResponseBuilder {
     private final ApiStatusMessageResolver apiStatusMessageResolver;
 
-    ResponseEntity<ApiResponseOnException> buildServerError() {
-        return buildFrom(INTERNAL_SERVER_ERROR).wrap(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    ResponseEntity<ApiResponseOnException> buildFrom(ApiStatus apiStatus, HttpStatus httpStatus) {
-        return buildFrom(apiStatus).wrap(httpStatus);
+    ApiResponseOnException buildServerError() {
+        return buildFrom(INTERNAL_SERVER_ERROR);
     }
 
     ResponseEntity<ApiResponseOnException> buildFrom(Exception exception, ApiStatus apiStatus, HttpStatus httpStatus) {
         return buildFrom(apiStatus, exception.getMessage()).wrap(httpStatus);
     }
 
-    ResponseEntity<ApiResponseOnException> buildFrom(BaseApiException exception) {
-        return buildFrom(exception.getApiStatus()).wrap(exception.getHttpStatus());
+    ApiResponseOnException buildFrom(BaseApiException exception) {
+        return buildFrom(exception.getApiStatus());
     }
 
-    private ApiResponseOnException buildFrom(ApiStatus apiStatus) {
-        return buildFrom(apiStatus, (String)null);
+    ApiResponseOnException buildFrom(ApiStatus apiStatus) {
+        return buildFrom(apiStatus, null);
     }
 
     private ApiResponseOnException buildFrom(ApiStatus apiStatus, String exceptionData) {
