@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception;
+import pl.sdacademy.domain.shared.exceptions.Forbidden403Exception;
 import pl.sdacademy.domain.shared.exceptions.NotFound404Exception;
 import pl.sdacademy.domain.task.dto.request.SubmitTaskRequest;
 import pl.sdacademy.domain.task.dto.response.GetTaskResponse;
 import pl.sdacademy.domain.task.dto.response.SubmitTaskResponse;
+import pl.sdacademy.infrastructure.properties.ApplicationProperties;
 import rx.Observable;
 
 import javax.validation.constraints.NotNull;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.stream;
 import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
@@ -33,8 +36,12 @@ class TaskService {
     private final static String TASK_PREFIX = "TASK_";
 
     private final TaskDescriptionResolver taskDescriptionResolver;
+    private final ApplicationProperties applicationProperties;
 
     List<Task.TaskRepresentation> getAllTasks() {
+        of(applicationProperties).map(ApplicationProperties::getDebugEnabled)
+                                 .filter(TRUE::equals)
+                                 .orElseThrow(() -> new Forbidden403Exception(DEBUG_MODE_DISABLED));
         return stream(Task.values()).map(Task::asRepresentation)
                                     .collect(toList());
     }

@@ -1,11 +1,15 @@
 package pl.sdacademy.domain.task
 
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception
+import pl.sdacademy.domain.shared.exceptions.Forbidden403Exception
 import pl.sdacademy.domain.shared.exceptions.NotFound404Exception
 import pl.sdacademy.domain.task.dto.request.SubmitTaskRequest
+import pl.sdacademy.infrastructure.properties.ApplicationProperties
 import rx.Observable
 import spock.lang.Specification
 
+import static java.lang.Boolean.FALSE
+import static java.lang.Boolean.TRUE
 import static pl.sdacademy.domain.task.Task.TASK_1
 import static pl.sdacademy.domain.task.Task.TASK_2
 import static rx.Observable.just
@@ -13,9 +17,10 @@ import static rx.Observable.just
 class TaskServiceSpecTest extends Specification {
 
     def taskDescriptionResolver = Mock TaskDescriptionResolver
-    def taskService = new TaskService(taskDescriptionResolver)
+    def applicationProperties = Mock ApplicationProperties
+    def taskService = new TaskService(taskDescriptionResolver, applicationProperties)
 
-    def "should return all tasks as list of their representations"() {
+    def "should return all tasks as list of their representations if debug mode is enabled"() {
         given:
         def tasks = Task.values()
 
@@ -23,11 +28,28 @@ class TaskServiceSpecTest extends Specification {
         def result = taskService.getAllTasks()
 
         then:
+        applicationProperties.getDebugEnabled() >> TRUE
+
+        and:
         0 * taskDescriptionResolver._
 
         and:
         tasks.length == result.size()
         result.forEach({ it -> assert it == Task.valueOf(it.name).asRepresentation() })
+    }
+
+    def "should throw forbidden exception if debug mode is disabled"() {
+        when:
+        taskService.getAllTasks()
+
+        then:
+        applicationProperties.getDebugEnabled() >> FALSE
+
+        and:
+        0 * _._
+
+        and:
+        thrown Forbidden403Exception
     }
 
     def "should return the task data if the task token is valid"() {

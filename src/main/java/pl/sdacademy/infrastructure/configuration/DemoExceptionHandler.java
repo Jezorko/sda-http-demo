@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.sdacademy.domain.shared.ApiResponseOnException;
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception;
+import pl.sdacademy.domain.shared.exceptions.Forbidden403Exception;
 import pl.sdacademy.domain.shared.exceptions.InternalServer500Exception;
 import pl.sdacademy.domain.shared.exceptions.NotFound404Exception;
 
@@ -48,6 +49,13 @@ public class DemoExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(BadRequest400Exception.class)
     public ResponseEntity<ApiResponseOnException> badRequest400(BadRequest400Exception exception) {
+        log.info("", exception);
+        return apiResponseBuilder.buildFrom(exception);
+    }
+
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(Forbidden403Exception.class)
+    public ResponseEntity<ApiResponseOnException> forbidden403(Forbidden403Exception exception) {
         log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
