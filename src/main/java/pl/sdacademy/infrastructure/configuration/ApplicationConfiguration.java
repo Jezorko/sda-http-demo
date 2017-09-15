@@ -15,6 +15,7 @@ public class ApplicationConfiguration {
     ResourceBundleMessageSource taskDescriptions() {
         ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
         resourceBundleMessageSource.setBasename("tasks/descriptions");
+        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         resourceBundleMessageSource.setFallbackToSystemLocale(true);
         return resourceBundleMessageSource;
     }
@@ -23,6 +24,7 @@ public class ApplicationConfiguration {
     ResourceBundleMessageSource errorMessages() {
         ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
         resourceBundleMessageSource.setBasename("errors/messages");
+        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         resourceBundleMessageSource.setFallbackToSystemLocale(true);
         return resourceBundleMessageSource;
     }
