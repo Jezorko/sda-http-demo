@@ -28,7 +28,7 @@ import static rx.Observable.zip;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TaskService {
+class TaskService {
 
     private final static String TASK_PREFIX = "TASK_";
 

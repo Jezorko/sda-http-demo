@@ -17,7 +17,7 @@ import static pl.sdacademy.domain.shared.HeaderNames.TASK_TOKEN;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tasks")
-public class TaskController {
+class TaskController {
     private final TaskService taskService;
 
     @GetMapping

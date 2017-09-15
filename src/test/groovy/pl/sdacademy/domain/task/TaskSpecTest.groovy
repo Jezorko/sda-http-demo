@@ -1,9 +1,12 @@
 package pl.sdacademy.domain.task
 
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.support.PropertiesLoaderUtils
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static java.util.Arrays.asList
+import static org.apache.commons.lang3.StringUtils.isNotBlank
 import static pl.sdacademy.domain.task.Task.TASK_1
 import static pl.sdacademy.domain.task.Task.TASK_2
 
@@ -34,5 +37,28 @@ class TaskSpecTest extends Specification {
 
         where:
         task << asList(Task.values())
+    }
+
+    @Unroll
+    "should check all messages in #messagesPath to match Task values"() {
+        given:
+        def resource = new ClassPathResource(messagesPath)
+
+        when:
+        def properties = PropertiesLoaderUtils.loadProperties(resource)
+
+        then:
+        Task.values().each {
+            def toCheckName = it.name()
+            def message = properties.get(toCheckName)
+            assert properties.containsKey(toCheckName)
+            assert isNotBlank(message as CharSequence)
+        }
+
+        where:
+        messagesPath << [
+                "/tasks/descriptions_en.properties",
+                "/tasks/descriptions_pl.properties"
+        ]
     }
 }

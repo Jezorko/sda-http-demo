@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 @Component
 @RequiredArgsConstructor
-public class TaskDescriptionResolver extends EnumMessageResolver<Task> {
+class TaskDescriptionResolver extends EnumMessageResolver<Task> {
 
     private final MessageSource taskDescriptions;
     private final HttpServletRequest httpRequest;

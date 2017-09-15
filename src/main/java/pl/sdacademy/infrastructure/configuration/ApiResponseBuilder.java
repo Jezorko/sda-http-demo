@@ -24,13 +24,26 @@ class ApiResponseBuilder {
         return buildFrom(INTERNAL_SERVER_ERROR).wrap(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    ResponseEntity<ApiResponseOnException> buildFrom(ApiStatus apiStatus, HttpStatus httpStatus) {
+        return buildFrom(apiStatus).wrap(httpStatus);
+    }
+
+    ResponseEntity<ApiResponseOnException> buildFrom(Exception exception, ApiStatus apiStatus, HttpStatus httpStatus) {
+        return buildFrom(apiStatus, exception.getMessage()).wrap(httpStatus);
+    }
+
     ResponseEntity<ApiResponseOnException> buildFrom(BaseApiException exception) {
         return buildFrom(exception.getApiStatus()).wrap(exception.getHttpStatus());
     }
 
     private ApiResponseOnException buildFrom(ApiStatus apiStatus) {
+        return buildFrom(apiStatus, (String)null);
+    }
+
+    private ApiResponseOnException buildFrom(ApiStatus apiStatus, String exceptionData) {
         return zip(just(apiStatus),
                    apiStatusMessageResolver.resolveMessageFor(apiStatus),
+                   just(exceptionData),
                    ApiResponseOnException::new)
                 .toBlocking()
                 .single();
