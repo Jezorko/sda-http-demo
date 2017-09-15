@@ -16,8 +16,4 @@ public class ApiResponseOnException {
 
     @JsonSerialize(include = NON_NULL)
     private final String exceptionData;
-
-    public ResponseEntity<ApiResponseOnException> wrap(HttpStatus status) {
-        return new ResponseEntity<>(this, status);
-    }
 }

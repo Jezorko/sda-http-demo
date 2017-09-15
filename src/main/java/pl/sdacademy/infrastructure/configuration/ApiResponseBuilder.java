@@ -25,7 +25,7 @@ class ApiResponseBuilder {
     }
 
     ResponseEntity<ApiResponseOnException> buildFrom(Exception exception, ApiStatus apiStatus, HttpStatus httpStatus) {
-        return buildFrom(apiStatus, exception.getMessage()).wrap(httpStatus);
+        return wrap(buildFrom(apiStatus, exception.getMessage()), httpStatus);
     }
 
     ApiResponseOnException buildFrom(BaseApiException exception) {
@@ -43,5 +43,9 @@ class ApiResponseBuilder {
                    ApiResponseOnException::new)
                 .toBlocking()
                 .single();
+    }
+
+    private ResponseEntity<ApiResponseOnException> wrap(ApiResponseOnException apiResponse, HttpStatus httpStatus) {
+        return new ResponseEntity<>(apiResponse, httpStatus);
     }
 }
