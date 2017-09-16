@@ -4,14 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.domain.shared.DigestUtil;
+import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception;
+import pl.sdacademy.domain.shared.exceptions.BaseApiException;
 import pl.sdacademy.domain.shared.exceptions.InternalServer500Exception;
 import pl.sdacademy.domain.user.dto.request.CreateUserRequest;
 
 import java.util.Objects;
 
+import static pl.sdacademy.domain.shared.ApiStatus.USER_ALREADY_EXISTS;
 import static pl.sdacademy.domain.shared.ApiStatus.USER_CREATION_ERROR;
-import static rx.Observable.fromCallable;
-import static rx.Observable.just;
+import static rx.Observable.*;
 
 @Slf4j
 @Service
@@ -22,15 +24,17 @@ public class CreateUserService {
     private final DigestUtil digestUtil;
 
     public void createUser(CreateUserRequest request) {
-        just(request).map(CreateUserRequest::getUsername)
-                     .map(userRepository::getByUsername)
-                     .filter(Objects::nonNull)
-                     .switchIfEmpty(fromCallable(() -> buildUserFrom(request)))
-                     .doOnNext(userRepository::save)
-                     .map(User::getId)
-                     .toBlocking()
-                     .subscribe(id -> log.info("User id is: {}", id),
-                                this::throwUserCreatingException);
+        zip(just(request).map(CreateUserRequest::getUsername),
+            just(request).map(CreateUserRequest::getEmail),
+            userRepository::getByUsernameOrEmail)
+                .filter(Objects::nonNull)
+                .doOnNext(u -> {throw new BadRequest400Exception(USER_ALREADY_EXISTS);})
+                .switchIfEmpty(fromCallable(() -> buildUserFrom(request)))
+                .doOnNext(userRepository::save)
+                .map(User::getId)
+                .toBlocking()
+                .subscribe(id -> log.info("User id is: {}", id),
+                           this::throwUserCreatingException);
     }
 
     private User buildUserFrom(CreateUserRequest request) {
@@ -44,7 +48,9 @@ public class CreateUserService {
     }
 
     private void throwUserCreatingException(Throwable e) {
-        log.error("Exception was thrown while creating user:", e);
-        throw new InternalServer500Exception(USER_CREATION_ERROR);
+        if (e instanceof BaseApiException) {
+            throw (BaseApiException) e;
+        }
+        throw new InternalServer500Exception(USER_CREATION_ERROR, e);
     }
 }

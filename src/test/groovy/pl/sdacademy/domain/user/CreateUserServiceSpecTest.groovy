@@ -1,6 +1,7 @@
 package pl.sdacademy.domain.user
 
 import pl.sdacademy.domain.shared.DigestUtil
+import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception
 import pl.sdacademy.domain.shared.exceptions.InternalServer500Exception
 import pl.sdacademy.domain.user.dto.request.CreateUserRequest
 import spock.lang.Specification
@@ -20,9 +21,10 @@ class CreateUserServiceSpecTest extends Specification {
 
         then: "username is taken from the request"
         1 * request.getUsername() >> "user"
+        1 * request.getEmail() >> "test@sdacademy.pl"
 
-        and: "database is queried by username"
-        1 * repository.getByUsername("user") >> null
+        and: "database is queried by username and email"
+        1 * repository.getByUsernameOrEmail("user", "test@sdacademy.pl") >> null
 
         and: "a new user object is created and it's password hashed"
         1 * request.getUsername()
@@ -44,15 +46,16 @@ class CreateUserServiceSpecTest extends Specification {
 
         then: "username is taken from the request"
         1 * request.getUsername() >> "user"
+        1 * request.getEmail() >> "test@sdacademy.pl"
 
-        and: "database is queried by username"
-        1 * repository.getByUsername("user") >> user
+        and: "database is queried by username and email"
+        1 * repository.getByUsernameOrEmail("user", "test@sdacademy.pl") >> user
 
-        and: "a new user object is not created so the password needs not to be hashed"
-        0 * digestUtil._
+        and: "a new user object is not created and no other action is performed"
+        0 * _._
 
-        and: "the same user is saved to the database"
-        1 * repository.save(user)
+        and: "exception is thrown"
+        thrown BadRequest400Exception
     }
 
     def "should throw internal server error if request is null"() {
@@ -62,7 +65,7 @@ class CreateUserServiceSpecTest extends Specification {
         when:
         service.createUser request
 
-        then: "no action can be performed"
+        then: "no action is be performed"
         0 * _._
 
         and: "exception is thrown"

@@ -106,7 +106,7 @@ public class DemoExceptionHandler {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InternalServer500Exception.class)
     public ApiResponseOnException internalServer500(InternalServer500Exception exception) {
-        log.error("Exception thrown", exception);
+        log.error("Exception thrown", exception.getCause());
         return apiResponseBuilder.buildFrom(exception);
     }
 }
