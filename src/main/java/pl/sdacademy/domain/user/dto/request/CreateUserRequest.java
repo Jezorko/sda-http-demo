@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
+import pl.sdacademy.domain.shared.validation.OptionalEmail;
 
 @Getter
 @Setter
@@ -15,5 +16,6 @@ public class CreateUserRequest {
     @NotBlank
     private String password;
 
+    @OptionalEmail
     private String email;
 }
