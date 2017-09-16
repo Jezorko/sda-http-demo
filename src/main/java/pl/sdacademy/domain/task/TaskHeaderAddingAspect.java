@@ -3,8 +3,11 @@ package pl.sdacademy.domain.task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import pl.sdacademy.domain.authorization.dto.response.LoginUserResponse;
+import rx.Observable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import static java.util.Optional.of;
 import static pl.sdacademy.domain.shared.HeaderNames.ACCEPT_LANGUAGE;
 import static pl.sdacademy.domain.shared.HeaderNames.TASK_SUBMIT_TOKEN;
-import static pl.sdacademy.domain.task.Task.TASK_1;
-import static pl.sdacademy.domain.task.Task.TASK_2;
+import static pl.sdacademy.domain.task.Task.*;
 
 @Slf4j
 @Aspect
@@ -33,6 +35,11 @@ public class TaskHeaderAddingAspect {
     @After("execution(public void pl.sdacademy.domain.user.CreateUserService.createUser(..))")
     public void task2Completed() {
         addSubmitTokenOf(TASK_2);
+    }
+
+    @AfterReturning(value = "execution(public * pl.sdacademy.domain.authorization.AuthorizationService.login(..))", returning = "result")
+    public void task3Completed(Observable<LoginUserResponse> result) {
+        result.subscribe(r -> addSubmitTokenOf(TASK_3));
     }
 
     private void addSubmitTokenOf(Task task) {

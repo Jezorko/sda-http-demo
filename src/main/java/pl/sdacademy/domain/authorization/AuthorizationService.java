@@ -24,7 +24,7 @@ public class AuthorizationService {
     private final UserFacade userFacade;
     private final AuthorizationTokenRepository authorizationTokenRepository;
 
-    Observable<LoginUserResponse> login(LoginUserRequest request) {
+    public Observable<LoginUserResponse> login(LoginUserRequest request) {
         return userFacade.getUserValidateCredentials(request.getUsername(), request.getPassword())
                          .flatMap(u -> just(u).map(authorizationTokenRepository::findByUser)
                                               .filter(Objects::nonNull)

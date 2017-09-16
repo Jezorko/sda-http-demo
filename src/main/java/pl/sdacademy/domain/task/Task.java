@@ -15,7 +15,8 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 @RequiredArgsConstructor
 enum Task {
     TASK_1,
-    TASK_2;
+    TASK_2,
+    TASK_3;
 
     private final String token = randomAlphanumeric(10);
     private final String submitToken = randomAlphanumeric(10);
