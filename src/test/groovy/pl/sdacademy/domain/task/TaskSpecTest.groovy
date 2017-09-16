@@ -57,8 +57,8 @@ class TaskSpecTest extends Specification {
 
         where:
         messagesPath << [
-                "/tasks/descriptions_en.properties",
-                "/tasks/descriptions_pl.properties"
+                "/internationalization/tasks/descriptions.properties",
+                "/internationalization/tasks/descriptions_pl.properties"
         ]
     }
 }

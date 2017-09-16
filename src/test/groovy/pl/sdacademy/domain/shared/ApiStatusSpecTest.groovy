@@ -26,8 +26,8 @@ class ApiStatusSpecTest extends Specification {
 
         where:
         messagesPath << [
-                "/errors/messages_en.properties",
-                "/errors/messages_pl.properties"
+                "/internationalization/statuses/descriptions.properties",
+                "/internationalization/statuses/descriptions_pl.properties"
         ]
     }
 }

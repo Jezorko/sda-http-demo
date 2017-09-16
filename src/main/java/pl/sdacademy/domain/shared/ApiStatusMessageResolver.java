@@ -13,12 +13,12 @@ import static pl.sdacademy.domain.shared.ApiStatus.DESCRIPTION_NOT_FOUND;
 @RequiredArgsConstructor
 public class ApiStatusMessageResolver extends EnumMessageResolver<ApiStatus> {
 
-    private final MessageSource errorMessages;
+    private final MessageSource statusesDescriptions;
     private final HttpServletRequest httpRequest;
 
     @Override
     public MessageSource getMessageSource() {
-        return errorMessages;
+        return statusesDescriptions;
     }
 
     @Override

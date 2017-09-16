@@ -2,15 +2,18 @@ package pl.sdacademy.infrastructure.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import pl.sdacademy.domain.shared.ApiResponseOnException;
-import pl.sdacademy.domain.shared.ApiStatus;
-import pl.sdacademy.domain.shared.ApiStatusMessageResolver;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import pl.sdacademy.domain.shared.*;
 import pl.sdacademy.domain.shared.exceptions.BaseApiException;
+import rx.functions.Func2;
 
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 import static pl.sdacademy.domain.shared.ApiStatus.INTERNAL_SERVER_ERROR;
+import static pl.sdacademy.domain.shared.ApiStatus.VALIDATION_ERROR;
 import static rx.Observable.just;
 import static rx.Observable.zip;
 
@@ -24,28 +27,38 @@ class ApiResponseBuilder {
         return buildFrom(INTERNAL_SERVER_ERROR);
     }
 
-    ResponseEntity<ApiResponseOnException> buildFrom(Exception exception, ApiStatus apiStatus, HttpStatus httpStatus) {
-        return wrap(buildFrom(apiStatus, exception.getMessage()), httpStatus);
-    }
-
     ApiResponseOnException buildFrom(BaseApiException exception) {
         return buildFrom(exception.getApiStatus());
     }
 
-    ApiResponseOnException buildFrom(ApiStatus apiStatus) {
-        return buildFrom(apiStatus, null);
+    ApiResponseOnValidation buildFrom(MethodArgumentNotValidException exception) {
+        return buildFrom(exception.getBindingResult()
+                                  .getFieldErrors()
+                                  .stream()
+                                  .map(FieldValidationError::new)
+                                  .collect(toSet()));
     }
 
-    private ApiResponseOnException buildFrom(ApiStatus apiStatus, String exceptionData) {
+    ApiResponseOnValidation buildFrom(ConstraintViolationException exception) {
+        return buildFrom(exception.getConstraintViolations()
+                                  .stream()
+                                  .map(FieldValidationError::new)
+                                  .collect(toSet()));
+    }
+
+    ApiResponseOnException buildFrom(ApiStatus apiStatus) {
+        return buildFrom(apiStatus, ApiResponseOnException::new);
+    }
+
+    private ApiResponseOnValidation buildFrom(Set<FieldValidationError> validationErrors) {
+        return buildFrom(VALIDATION_ERROR, (apiStatus, description) -> new ApiResponseOnValidation(apiStatus, description, validationErrors));
+    }
+
+    private <T extends ApiResponseOnException> T buildFrom(ApiStatus apiStatus, Func2<ApiStatus, String, T> responseConstructor) {
         return zip(just(apiStatus),
                    apiStatusMessageResolver.resolveMessageFor(apiStatus),
-                   just(exceptionData),
-                   ApiResponseOnException::new)
+                   responseConstructor)
                 .toBlocking()
                 .single();
-    }
-
-    private ResponseEntity<ApiResponseOnException> wrap(ApiResponseOnException apiResponse, HttpStatus httpStatus) {
-        return new ResponseEntity<>(apiResponse, httpStatus);
     }
 }
