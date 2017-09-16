@@ -3,7 +3,6 @@ package pl.sdacademy.domain.shared;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import pl.sdacademy.infrastructure.properties.ClientProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Supplier;
@@ -16,7 +15,6 @@ public class ApiStatusMessageResolver extends EnumMessageResolver<ApiStatus> {
 
     private final MessageSource errorMessages;
     private final HttpServletRequest httpRequest;
-    private final ClientProperties clientProperties;
 
     @Override
     public MessageSource getMessageSource() {
@@ -26,11 +24,6 @@ public class ApiStatusMessageResolver extends EnumMessageResolver<ApiStatus> {
     @Override
     public HttpServletRequest getHttpRequest() {
         return httpRequest;
-    }
-
-    @Override
-    public ClientProperties getClientProperties() {
-        return clientProperties;
     }
 
     @Override

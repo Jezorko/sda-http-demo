@@ -15,7 +15,6 @@ class EnumMessageResolverSpecTest extends Specification {
     def enumValue = TEST_ENUM_VALUE
     def messageSource = Mock MessageSource
     def httpRequest = Mock HttpServletRequest
-    def clientProperties = Mock ClientProperties
     def defaultNameGetter = Mock Supplier
     def enumMessageResolver = Spy EnumMessageResolver
 
@@ -27,29 +26,9 @@ class EnumMessageResolverSpecTest extends Specification {
         0 * enumMessageResolver.getDefaultNameGetter()
         0 * defaultNameGetter.get()
         1 * enumMessageResolver.getHttpRequest() >> httpRequest
-        1 * httpRequest.getHeader(ACCEPT_LANGUAGE) >> "pl"
-        0 * enumMessageResolver.getClientProperties()
-        0 * clientProperties.getDefaultLocale()
+        1 * httpRequest.getLocale() >> new Locale("pl")
         1 * enumMessageResolver.getMessageSource() >> messageSource
         1 * messageSource.getMessage(TEST_ENUM_VALUE.name(), null, new Locale("pl")) >> "TEST_MESSAGE"
-
-        and:
-        "TEST_MESSAGE" == message
-    }
-
-    def "should use default locale if locales are not present in headers"() {
-        when:
-        def message = enumMessageResolver.resolveMessageFor(enumValue).toBlocking().single()
-
-        then:
-        0 * enumMessageResolver.getDefaultNameGetter()
-        0 * defaultNameGetter.get()
-        1 * enumMessageResolver.getHttpRequest() >> httpRequest
-        1 * httpRequest.getHeader(ACCEPT_LANGUAGE) >> null
-        1 * enumMessageResolver.getClientProperties() >> clientProperties
-        1 * clientProperties.getDefaultLocale() >> "en"
-        1 * enumMessageResolver.getMessageSource() >> messageSource
-        1 * messageSource.getMessage(TEST_ENUM_VALUE.name(), null, new Locale("en")) >> "TEST_MESSAGE"
 
         and:
         "TEST_MESSAGE" == message
@@ -63,9 +42,7 @@ class EnumMessageResolverSpecTest extends Specification {
         1 * enumMessageResolver.getDefaultNameGetter() >> defaultNameGetter
         1 * defaultNameGetter.get() >> "DEFAULT_NAME"
         1 * enumMessageResolver.getHttpRequest() >> httpRequest
-        1 * httpRequest.getHeader(ACCEPT_LANGUAGE) >> "pl"
-        0 * enumMessageResolver.getClientProperties()
-        0 * clientProperties.getDefaultLocale()
+        1 * httpRequest.getLocale() >> new Locale("pl")
         1 * enumMessageResolver.getMessageSource() >> messageSource
         1 * messageSource.getMessage("DEFAULT_NAME", null, new Locale("pl")) >> "TEST_DEFAULT_MESSAGE"
 

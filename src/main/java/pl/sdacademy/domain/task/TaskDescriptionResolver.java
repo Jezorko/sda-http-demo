@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import pl.sdacademy.domain.shared.EnumMessageResolver;
-import pl.sdacademy.infrastructure.properties.ClientProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Supplier;
@@ -15,7 +14,6 @@ class TaskDescriptionResolver extends EnumMessageResolver<Task> {
 
     private final MessageSource taskDescriptions;
     private final HttpServletRequest httpRequest;
-    private final ClientProperties clientProperties;
 
     @Override
     public MessageSource getMessageSource() {
@@ -25,11 +23,6 @@ class TaskDescriptionResolver extends EnumMessageResolver<Task> {
     @Override
     public HttpServletRequest getHttpRequest() {
         return httpRequest;
-    }
-
-    @Override
-    public ClientProperties getClientProperties() {
-        return clientProperties;
     }
 
     @Override
