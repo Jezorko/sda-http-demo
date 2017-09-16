@@ -87,7 +87,7 @@ class TaskService {
                              .map(TASK_PREFIX::concat)
                              .map(Task::valueOf);
         } catch (IllegalArgumentException e) {
-            log.error("Task of ID={} does not exist", taskId);
+            log.info("Task of ID={} does not exist", taskId);
             return empty();
         }
     }
