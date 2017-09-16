@@ -2,7 +2,6 @@ package pl.sdacademy.domain.task;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
@@ -26,13 +25,13 @@ public class TaskHeaderAddingAspect {
     private final HttpServletRequest httpRequest;
     private final HttpServletResponse httpResponse;
 
-    @After("execution(public * pl.sdacademy.domain.task.TaskService.getTask(..))")
+    @AfterReturning("execution(public * pl.sdacademy.domain.task.TaskService.getTask(..))")
     public void task1Completed() {
         of(httpRequest).map(r -> r.getHeader(ACCEPT_LANGUAGE))
                        .ifPresent(h -> addSubmitTokenOf(TASK_1));
     }
 
-    @After("execution(public void pl.sdacademy.domain.user.CreateUserService.createUser(..))")
+    @AfterReturning("execution(public void pl.sdacademy.domain.user.CreateUserService.createUser(..))")
     public void task2Completed() {
         addSubmitTokenOf(TASK_2);
     }
