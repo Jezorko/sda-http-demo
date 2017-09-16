@@ -9,6 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Table
 @Entity
+@Setter
 @Getter
 @Builder
 @AllArgsConstructor
