@@ -20,7 +20,7 @@ public class UpdateUserService {
     private final AuthorizationFacade authorizationFacade;
     private final DigestUtil digestUtil;
 
-    void updateUser(UpdateUserRequest request) {
+    public void updateUser(UpdateUserRequest request) {
         authorizationFacade.getByToken()
                            .map(u -> updateUser(u, request))
                            .map(userRepository::save)

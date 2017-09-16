@@ -42,6 +42,11 @@ public class TaskHeaderAddingAspect {
                          e -> {});
     }
 
+    @AfterReturning("execution(public void pl.sdacademy.domain.user.UpdateUserService.updateUser(..))")
+    public void task4Completed() {
+        addSubmitTokenOf(TASK_4);
+    }
+
     private void addSubmitTokenOf(Task task) {
         log.info(task.name() + " completed");
         httpResponse.addHeader(TASK_SUBMIT_TOKEN, task.getSubmitToken());
