@@ -9,7 +9,7 @@ import rx.Observable;
 
 import java.util.Objects;
 
-import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static pl.sdacademy.domain.shared.ApiStatus.INVALID_CREDENTIALS;
 import static pl.sdacademy.domain.shared.ApiStatus.USER_NOT_FOUND;
 import static rx.Observable.*;
@@ -24,7 +24,7 @@ public class UserFacade {
     public Observable<User> getUserValidateCredentials(String username, String password) {
         return just(username).map(userRepository::getByUsername)
                              .filter(Objects::nonNull)
-                             .switchIfEmpty(fromCallable(() -> {throw new NotFound404Exception(USER_NOT_FOUND);}))
+                             .switchIfEmpty(error(new NotFound404Exception(USER_NOT_FOUND)))
                              .doOnNext(user -> validatePasswordOf(user, password));
     }
 
@@ -32,8 +32,8 @@ public class UserFacade {
         zip(just(user).map(User::getPasswordHash),
             just(password).map(digestUtil::generateHashFrom),
             Objects::equals)
-                .filter(FALSE::equals)
-                .doOnNext(e -> {throw new BadRequest400Exception(INVALID_CREDENTIALS);})
+                .filter(TRUE::equals)
+                .switchIfEmpty(error(new BadRequest400Exception(INVALID_CREDENTIALS)))
                 .toBlocking()
                 .subscribe();
     }

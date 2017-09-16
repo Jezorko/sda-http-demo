@@ -38,7 +38,8 @@ public class TaskHeaderAddingAspect {
 
     @AfterReturning(value = "execution(public * pl.sdacademy.domain.authorization.AuthorizationService.login(..))", returning = "result")
     public void task3Completed(Observable<LoginUserResponse> result) {
-        result.subscribe(r -> addSubmitTokenOf(TASK_3));
+        result.subscribe(r -> addSubmitTokenOf(TASK_3),
+                         e -> {});
     }
 
     private void addSubmitTokenOf(Task task) {

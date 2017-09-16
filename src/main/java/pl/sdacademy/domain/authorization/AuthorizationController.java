@@ -22,7 +22,7 @@ public class AuthorizationController {
 
     @PutMapping
     @ResponseStatus(OK)
-    public Observable<LoginUserResponse> login(@RequestBody @Valid @NotNull LoginUserRequest request) {
+    Observable<LoginUserResponse> login(@RequestBody @Valid @NotNull LoginUserRequest request) {
         log.info("Incoming user login request: {}", request);
         return authorizationService.login(request);
     }

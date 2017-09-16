@@ -9,8 +9,8 @@ import pl.sdacademy.domain.user.dto.request.CreateUserRequest;
 
 import java.util.Objects;
 
+import static pl.sdacademy.domain.shared.ApiStatus.INTERNAL_SERVER_ERROR;
 import static pl.sdacademy.domain.shared.ApiStatus.USER_ALREADY_EXISTS;
-import static pl.sdacademy.domain.shared.ApiStatus.USER_CREATION_ERROR;
 import static pl.sdacademy.domain.shared.RxJavaCommonFunctions.throwCustomExceptionOrElse;
 import static rx.Observable.*;
 
@@ -33,7 +33,7 @@ public class CreateUserService {
                 .map(User::getId)
                 .toBlocking()
                 .subscribe(id -> log.info("User id is: {}", id),
-                           throwCustomExceptionOrElse(USER_CREATION_ERROR));
+                           throwCustomExceptionOrElse(INTERNAL_SERVER_ERROR));
     }
 
     private User buildUserFrom(CreateUserRequest request) {
