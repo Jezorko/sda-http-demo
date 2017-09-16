@@ -5,14 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.domain.shared.DigestUtil;
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception;
-import pl.sdacademy.domain.shared.exceptions.BaseApiException;
-import pl.sdacademy.domain.shared.exceptions.InternalServer500Exception;
 import pl.sdacademy.domain.user.dto.request.CreateUserRequest;
 
 import java.util.Objects;
 
 import static pl.sdacademy.domain.shared.ApiStatus.USER_ALREADY_EXISTS;
 import static pl.sdacademy.domain.shared.ApiStatus.USER_CREATION_ERROR;
+import static pl.sdacademy.domain.shared.RxJavaCommonFunctions.throwCustomExceptionOrElse;
 import static rx.Observable.*;
 
 @Slf4j
@@ -34,7 +33,7 @@ public class CreateUserService {
                 .map(User::getId)
                 .toBlocking()
                 .subscribe(id -> log.info("User id is: {}", id),
-                           this::throwUserCreatingException);
+                           throwCustomExceptionOrElse(USER_CREATION_ERROR));
     }
 
     private User buildUserFrom(CreateUserRequest request) {
@@ -45,12 +44,5 @@ public class CreateUserService {
                               .build();
         log.info("A new user has been created: {}", user);
         return user;
-    }
-
-    private void throwUserCreatingException(Throwable e) {
-        if (e instanceof BaseApiException) {
-            throw (BaseApiException) e;
-        }
-        throw new InternalServer500Exception(USER_CREATION_ERROR, e);
     }
 }

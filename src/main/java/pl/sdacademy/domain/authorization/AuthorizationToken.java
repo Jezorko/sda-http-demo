@@ -1,8 +1,10 @@
-package pl.sdacademy.domain.user;
+package pl.sdacademy.domain.authorization;
 
 import lombok.*;
+import pl.sdacademy.domain.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 import static lombok.AccessLevel.PROTECTED;
@@ -11,20 +13,21 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
-@ToString(exclude = "passwordHash")
 @NoArgsConstructor(access = PROTECTED)
-public class User {
+public class AuthorizationToken {
     @Id
-    @Column
+    @Column(nullable = false)
     @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
+    @OneToOne
+    private User user;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String value;
 
-    private String email;
+    @Column(nullable = false)
+    private LocalDateTime expirationDate;
 }
