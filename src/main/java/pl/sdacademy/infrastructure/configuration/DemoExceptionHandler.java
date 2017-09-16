@@ -34,15 +34,20 @@ public class DemoExceptionHandler {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ApiResponseOnException internalServer500(Exception exception) {
-        log.error("Exception thrown", exception);
         return apiResponseBuilder.buildServerError();
+    }
+
+    @ResponseBody
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InternalServer500Exception.class)
+    public ApiResponseOnException internalServer500(InternalServer500Exception exception) {
+        return apiResponseBuilder.buildFrom(exception);
     }
 
     @ResponseBody
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ApiResponseOnException invalidMethod(NoHandlerFoundException exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(INVALID_ENDPOINT);
     }
 
@@ -50,7 +55,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ApiResponseOnException invalidMediaType(HttpMediaTypeNotSupportedException exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(MEDIA_TYPE_NOT_SUPPORTED);
     }
 
@@ -58,7 +62,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponseOnException messageNotReadable(HttpMessageNotReadableException exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(MESSAGE_NOT_READABLE);
     }
 
@@ -66,7 +69,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(BadRequest400Exception.class)
     public ApiResponseOnException badRequest400(BadRequest400Exception exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
 
@@ -74,7 +76,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(FORBIDDEN)
     @ExceptionHandler(Forbidden403Exception.class)
     public ApiResponseOnException forbidden403(Forbidden403Exception exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
 
@@ -82,7 +83,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NotFound404Exception.class)
     public ApiResponseOnException notFound404(NotFound404Exception exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
 
@@ -90,7 +90,6 @@ public class DemoExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponseOnValidation methodArgumentValidation(MethodArgumentNotValidException exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
 
@@ -98,15 +97,7 @@ public class DemoExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ApiResponseOnValidation constraintViolation(ConstraintViolationException exception) {
-        log.info("", exception);
         return apiResponseBuilder.buildFrom(exception);
     }
 
-    @ResponseBody
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(InternalServer500Exception.class)
-    public ApiResponseOnException internalServer500(InternalServer500Exception exception) {
-        log.error("Exception thrown", exception.getCause());
-        return apiResponseBuilder.buildFrom(exception);
-    }
 }
