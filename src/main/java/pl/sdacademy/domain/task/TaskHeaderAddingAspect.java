@@ -47,6 +47,11 @@ public class TaskHeaderAddingAspect {
         addSubmitTokenOf(TASK_4);
     }
 
+    @AfterReturning("execution(public void pl.sdacademy.domain.verification.SendEmailVerificationService.sendEmailVerification(..))")
+    public void task5Completed() {
+        addSubmitTokenOf(TASK_5);
+    }
+
     private void addSubmitTokenOf(Task task) {
         log.info(task.name() + " completed");
         httpResponse.addHeader(TASK_SUBMIT_TOKEN, task.getSubmitToken());
