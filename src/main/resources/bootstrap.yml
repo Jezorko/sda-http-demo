@@ -15,6 +15,11 @@ spring:
         hibernate:
             ddl-auto: create
         show-sql: ${application.debug-enabled}
+    mail:
+        host: smtp.poczta.pl
+        port: 587
+        username: sda.http.demo@poczta.pl
+        password: ThisIsATest
 application:
     debug-enabled: true
 client:
