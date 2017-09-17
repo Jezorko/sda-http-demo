@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import pl.sdacademy.domain.authorization.dto.response.LoginUserResponse;
+import pl.sdacademy.domain.verification.dto.response.GetVerificationCodeResponse;
 import rx.Observable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,12 @@ public class TaskHeaderAddingAspect {
     @AfterReturning("execution(public void pl.sdacademy.domain.verification.SendEmailVerificationService.sendEmailVerification(..))")
     public void task5Completed() {
         addSubmitTokenOf(TASK_5);
+    }
+
+    @AfterReturning(value = "execution(public * pl.sdacademy.domain.verification.GetEmailVerificationService.getVerificationCode(..))", returning = "result")
+    public void task6Completed(Observable<GetVerificationCodeResponse> result) {
+        result.subscribe(r -> addSubmitTokenOf(TASK_6),
+                         e -> {});
     }
 
     private void addSubmitTokenOf(Task task) {
