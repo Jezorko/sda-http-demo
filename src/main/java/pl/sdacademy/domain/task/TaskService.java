@@ -3,7 +3,6 @@ package pl.sdacademy.domain.task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import pl.sdacademy.domain.shared.exceptions.BadRequest400Exception;
 import pl.sdacademy.domain.shared.exceptions.Forbidden403Exception;
 import pl.sdacademy.domain.shared.exceptions.NotFound404Exception;
@@ -13,7 +12,6 @@ import pl.sdacademy.domain.task.dto.response.SubmitTaskResponse;
 import pl.sdacademy.infrastructure.properties.ApplicationProperties;
 import rx.Observable;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,20 +44,19 @@ class TaskService {
                                     .collect(toList());
     }
 
-    Observable<SubmitTaskResponse> submitTask(@RequestBody @NotNull SubmitTaskRequest request) {
-        return just(request).doOnNext(this::validateTaskSubmission)
-                            .map(SubmitTaskRequest::getId)
-                            .map(id -> id + 1)
-                            .map(this::getTaskBy)
-                            .map(nextTask -> nextTask.orElseThrow(() -> new NotFound404Exception(NO_MORE_TASKS)))
-                            .filter(Objects::nonNull)
-                            .map(task -> new SubmitTaskResponse(task.getId(), task.getToken()));
+    Observable<SubmitTaskResponse> submitTask(Long taskId, SubmitTaskRequest request) {
+        return just(taskId).doOnNext(id -> validateTaskSubmission(id, request))
+                           .map(id -> id + 1)
+                           .map(this::getTaskBy)
+                           .map(nextTask -> nextTask.orElseThrow(() -> new NotFound404Exception(NO_MORE_TASKS)))
+                           .filter(Objects::nonNull)
+                           .map(task -> new SubmitTaskResponse(task.getId(), task.getToken()));
     }
 
-    private void validateTaskSubmission(SubmitTaskRequest request) {
-        of(getTaskBy(request.getId(), request.getToken())).filter(currentTask -> currentTask.getSubmitToken()
-                                                                                            .equals(request.getSubmitToken()))
-                                                          .orElseThrow(() -> new BadRequest400Exception(BAD_SUBMIT_TOKEN));
+    private void validateTaskSubmission(Long taskId, SubmitTaskRequest request) {
+        of(getTaskBy(taskId, request.getToken())).filter(currentTask -> currentTask.getSubmitToken()
+                                                                                   .equals(request.getSubmitToken()))
+                                                 .orElseThrow(() -> new BadRequest400Exception(BAD_SUBMIT_TOKEN));
     }
 
     public Observable<GetTaskResponse> getTask(Long taskId, String taskToken) {

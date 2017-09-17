@@ -104,7 +104,7 @@ class TaskServiceSpecTest extends Specification {
         def submitToken = TASK_1.submitToken
 
         when:
-        def result = taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+        def result = taskService.submitTask(taskId, new SubmitTaskRequest(token: taskToken, submitToken: submitToken)).toBlocking().single()
 
         then:
         2L == result.nextTaskId
@@ -118,7 +118,7 @@ class TaskServiceSpecTest extends Specification {
         def submitToken = TASK_2.token
 
         when:
-        taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+        taskService.submitTask(taskId, new SubmitTaskRequest(token: taskToken, submitToken: submitToken)).toBlocking().single()
 
         then:
         thrown BadRequest400Exception
@@ -131,7 +131,7 @@ class TaskServiceSpecTest extends Specification {
         def submitToken = ""
 
         when:
-        taskService.submitTask(new SubmitTaskRequest(id: taskId, token: taskToken, submitToken: submitToken)).toBlocking().single()
+        taskService.submitTask(taskId, new SubmitTaskRequest(token: taskToken, submitToken: submitToken)).toBlocking().single()
 
         then:
         thrown BadRequest400Exception

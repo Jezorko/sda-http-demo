@@ -11,9 +11,6 @@ import javax.validation.constraints.NotNull;
 @ToString(exclude = {"token", "submitToken"})
 public class SubmitTaskRequest {
     @NotNull
-    private Long id;
-
-    @NotNull
     private String token;
 
     @NotNull

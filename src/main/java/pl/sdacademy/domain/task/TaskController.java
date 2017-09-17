@@ -25,13 +25,13 @@ class TaskController {
         return taskService.getAllTasks();
     }
 
-    @PostMapping
-    Observable<SubmitTaskResponse> submitTask(@RequestBody @NotNull SubmitTaskRequest request) {
-        return taskService.submitTask(request);
+    @PostMapping("/{taskId}")
+    Observable<SubmitTaskResponse> submitTask(@PathVariable @NotNull Long taskId, @RequestBody @NotNull SubmitTaskRequest request) {
+        return taskService.submitTask(taskId, request);
     }
 
     @GetMapping("/{taskId}")
-    Observable<GetTaskResponse> getTask(@PathVariable Long taskId, @RequestHeader(name = TASK_TOKEN, required = false) String taskToken) {
+    Observable<GetTaskResponse> getTask(@PathVariable @NotNull Long taskId, @RequestHeader(name = TASK_TOKEN, required = false) String taskToken) {
         return taskService.getTask(taskId, taskToken);
     }
 
