@@ -9,5 +9,6 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class GetTaskResponse {
     private final Long id;
+    private final String token;
     private final String description;
 }

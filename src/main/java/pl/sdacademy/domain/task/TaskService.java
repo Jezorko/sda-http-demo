@@ -65,10 +65,15 @@ class TaskService {
     public Observable<GetTaskResponse> getTask(Long taskId, String taskToken) {
         log.info("Request for task with ID={} and token={}", taskId, shortHash(taskToken));
         return zip(just(taskId),
+                   tokenOrFirstTaskToken(taskToken),
                    taskDescriptionResolver.resolveMessageFor(zip(just(taskId),
-                                                                 just(ofNullable(taskToken).orElseGet(TASK_1::getToken)),
+                                                                 tokenOrFirstTaskToken(taskToken),
                                                                  this::getTaskBy)),
                    GetTaskResponse::new);
+    }
+
+    private Observable<String> tokenOrFirstTaskToken(String taskToken) {
+        return just(ofNullable(taskToken).orElseGet(TASK_1::getToken));
     }
 
     private Task getTaskBy(Long taskId, String taskToken) {
