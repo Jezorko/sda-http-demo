@@ -1,0 +1,790 @@
+{
+	"variables": [],
+	"info": {
+		"name": "SDA HTTP DEMO",
+		"_postman_id": "42932698-24fd-cf8f-e345-0be5cbd4b25b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetAllTasks",
+			"request": {
+				"url": "http://localhost:8080/tasks",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetFirstTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var token = JSON.parse(responseBody).token;",
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (token !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.1.token\", token);",
+							"}",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.1.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveFirstTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.2.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/1",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.1.token}}\",\n\t\"submitToken\": \"{{tasks.1.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetSecondTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/2",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.2.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CreateNewUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.2.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"sdacademy\",\n\t\"password\":\"test\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveSecondTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.3.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/2",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.2.token}}\",\n\t\"submitToken\": \"{{tasks.2.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetThirdTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/3",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.3.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetAuthorizationToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var authToken = JSON.parse(responseBody).token;",
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (authToken !== null) {",
+							"    postman.setEnvironmentVariable(\"auth.token\", authToken);",
+							"}",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.3.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users/authorizations",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"sdacademy\",\n\t\"password\":\"test\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveThirdTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.4.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/3",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.3.token}}\",\n\t\"submitToken\": \"{{tasks.3.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetFourthTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/4",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.4.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateExistingUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.4.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"pawelfiu@gmail.com\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveFourthTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.5.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/4",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.4.token}}\",\n\t\"submitToken\": \"{{tasks.4.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetFifthTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/5",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.5.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "VerifyEmailAddress",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.5.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users/emails/verifications",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveFifthTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.6.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/5",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.5.token}}\",\n\t\"submitToken\": \"{{tasks.5.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetSixthTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/6",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.6.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetVerificationCode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var verificationCode = JSON.parse(responseBody).verificationCode;",
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (verificationCode !== null) {",
+							"    postman.setEnvironmentVariable(\"verification.code\", verificationCode);",
+							"}",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.6.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users/emails/verifications",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveSixthTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.7.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/6",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.6.token}}\",\n\t\"submitToken\": \"{{tasks.6.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetSeventhTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/7",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.7.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ConfirmEmailVerification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.7.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{basic.auth.login}}",
+						"password": "{{basic.auth.password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "http://localhost:8080/users/emails/verifications",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"verificationCode\": \"{{verification.code}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveSeventhTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.8.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/7",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.7.token}}\",\n\t\"submitToken\": \"{{tasks.7.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
