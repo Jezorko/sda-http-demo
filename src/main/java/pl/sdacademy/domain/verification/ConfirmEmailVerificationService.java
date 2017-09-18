@@ -24,7 +24,7 @@ public class ConfirmEmailVerificationService {
 
     public void confirmEmailVerification(ConfirmEmailVerificationRequest request) {
         authorizationFacade.getByToken()
-                           .map(verificationCodeRepository::findByUserWhereEmailsAreMatching)
+                           .map(verificationCodeRepository::getByUserWhereEmailsAreMatching)
                            .filter(Objects::nonNull)
                            .switchIfEmpty(error(new NotFound404Exception(VERIFICATION_NOT_FOUND)))
                            .filter(code -> code.getValue()

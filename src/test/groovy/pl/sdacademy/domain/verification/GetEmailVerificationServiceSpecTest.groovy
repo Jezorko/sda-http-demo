@@ -25,7 +25,7 @@ class GetEmailVerificationServiceSpecTest extends Specification {
         1 * authorizationFacade.getByToken() >> just(user)
 
         and:
-        1 * verificationCodeRepository.findByUserWhereEmailsAreMatching(user) >> verification
+        1 * verificationCodeRepository.getByUserWhereEmailsAreMatching(user) >> verification
         1 * verification.getValue() >> "123"
 
         and:
@@ -43,7 +43,7 @@ class GetEmailVerificationServiceSpecTest extends Specification {
         1 * authorizationFacade.getByToken() >> just(user)
 
         and:
-        1 * verificationCodeRepository.findByUserWhereEmailsAreMatching(user) >> null
+        1 * verificationCodeRepository.getByUserWhereEmailsAreMatching(user) >> null
 
         and:
         0 * _._

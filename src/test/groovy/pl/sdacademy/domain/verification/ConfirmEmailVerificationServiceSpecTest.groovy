@@ -26,7 +26,7 @@ class ConfirmEmailVerificationServiceSpecTest extends Specification {
 
         then:
         1 * authorizationFacade.getByToken() >> just(user)
-        1 * emailVerificationRepository.findByUserWhereEmailsAreMatching(user) >> verification
+        1 * emailVerificationRepository.getByUserWhereEmailsAreMatching(user) >> verification
 
         and:
         1 * verification.getValue() >> "123"
@@ -44,7 +44,7 @@ class ConfirmEmailVerificationServiceSpecTest extends Specification {
 
         then:
         1 * authorizationFacade.getByToken() >> just(user)
-        1 * emailVerificationRepository.findByUserWhereEmailsAreMatching(user) >> null
+        1 * emailVerificationRepository.getByUserWhereEmailsAreMatching(user) >> null
 
         and:
         0 * _._
@@ -64,7 +64,7 @@ class ConfirmEmailVerificationServiceSpecTest extends Specification {
 
         then:
         1 * authorizationFacade.getByToken() >> just(user)
-        1 * emailVerificationRepository.findByUserWhereEmailsAreMatching(user) >> verification
+        1 * emailVerificationRepository.getByUserWhereEmailsAreMatching(user) >> verification
 
         and:
         1 * verification.getValue() >> "000"

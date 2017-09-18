@@ -11,5 +11,5 @@ interface EmailVerificationCodeRepository extends JpaRepository<EmailVerificatio
     void deleteByUser(User user);
 
     @Query("select v from EmailVerificationCode v, User u where v.user = u and u = ?1 and v.email = u.email")
-    EmailVerificationCode findByUserWhereEmailsAreMatching(User user);
+    EmailVerificationCode getByUserWhereEmailsAreMatching(User user);
 }

@@ -23,7 +23,7 @@ public class GetEmailVerificationService {
 
     public Observable<GetVerificationCodeResponse> getVerificationCode() {
         return authorizationFacade.getByToken()
-                                  .map(verificationCodeRepository::findByUserWhereEmailsAreMatching)
+                                  .map(verificationCodeRepository::getByUserWhereEmailsAreMatching)
                                   .filter(Objects::nonNull)
                                   .switchIfEmpty(error(new NotFound404Exception(VERIFICATION_NOT_FOUND)))
                                   .map(EmailVerificationCode::getValue)
