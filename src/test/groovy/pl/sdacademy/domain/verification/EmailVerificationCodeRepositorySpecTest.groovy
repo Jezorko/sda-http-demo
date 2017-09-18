@@ -15,7 +15,7 @@ class EmailVerificationCodeRepositorySpecTest extends DatabaseSpecification {
     EmailVerificationCodeRepository verificationCodeRepository
 
 
-    @Sql(scripts = ["/sql/initializers/test_users.sql", "/sql/initializers/test_verification_codes.sql"])
+    @Sql(scripts = ["/sql/initializers/users.sql", "/sql/initializers/verification_codes.sql"])
     def "should find the verification if the user and user's email match the verification"() {
         given:
         def email = "alice@sdacademy.pl"
@@ -29,7 +29,7 @@ class EmailVerificationCodeRepositorySpecTest extends DatabaseSpecification {
     }
 
 
-    @Sql(scripts = ["/sql/initializers/test_users.sql", "/sql/initializers/test_verification_codes.sql"])
+    @Sql(scripts = ["/sql/initializers/users.sql", "/sql/initializers/verification_codes.sql"])
     def "should not find if user has a verification for a different email than their current one"() {
         given:
         def username = "bob"

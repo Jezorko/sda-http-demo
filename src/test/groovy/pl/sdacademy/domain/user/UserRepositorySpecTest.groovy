@@ -11,7 +11,7 @@ class UserRepositorySpecTest extends DatabaseSpecification {
     private UserRepository userRepository
 
     @Unroll
-    @Sql(scripts = "/sql/initializers/test_users.sql")
+    @Sql(scripts = "/sql/initializers/users.sql")
     "should find user by username #username and email #email"() {
         when:
         def user = userRepository.getByUsernameOrEmail(username, email)
@@ -30,7 +30,7 @@ class UserRepositorySpecTest extends DatabaseSpecification {
     }
 
     @Unroll
-    @Sql(scripts = "/sql/initializers/test_users.sql")
+    @Sql(scripts = "/sql/initializers/users.sql")
     "should not find the user if username is #username and email is #email"() {
         when:
         def user = userRepository.getByUsernameOrEmail(username, email)
