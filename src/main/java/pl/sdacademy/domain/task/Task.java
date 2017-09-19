@@ -20,7 +20,11 @@ enum Task {
     TASK_4,
     TASK_5,
     TASK_6,
-    TASK_7;
+    TASK_7,
+    TASK_8,
+    TASK_9,
+    TASK_10,
+    TASK_11;
 
     private final String token = randomAlphanumeric(10);
     private final String submitToken = randomAlphanumeric(10);

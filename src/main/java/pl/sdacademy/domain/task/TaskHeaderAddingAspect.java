@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import pl.sdacademy.domain.authorization.dto.response.LoginUserResponse;
+import pl.sdacademy.domain.image.dto.response.GetImagesResponse;
+import pl.sdacademy.domain.image.dto.response.UploadImageResponse;
 import pl.sdacademy.domain.verification.dto.response.GetVerificationCodeResponse;
 import rx.Observable;
 
@@ -62,6 +66,29 @@ public class TaskHeaderAddingAspect {
     @AfterReturning("execution(public void pl.sdacademy.domain.verification.ConfirmEmailVerificationService.confirmEmailVerification(..))")
     public void task7Completed() {
         addSubmitTokenOf(TASK_7);
+    }
+
+    @AfterReturning(value = "execution(public * pl.sdacademy.domain.image.UploadImageService.uploadImage(..))", returning = "result")
+    public void task8Completed(Observable<UploadImageResponse> result) {
+        result.subscribe(r -> addSubmitTokenOf(TASK_8),
+                         e -> {});
+    }
+
+    @AfterReturning(value = "execution(public * pl.sdacademy.domain.image.GetImageService.getImage(..))", returning = "result")
+    public void task9Completed(Observable<Resource> result) {
+        result.subscribe(r -> addSubmitTokenOf(TASK_9),
+                         e -> {});
+    }
+
+    @AfterReturning(value = "execution(public * pl.sdacademy.domain.image.GetImageService.getImages(..))", returning = "result")
+    public void task10Completed(Observable<Page<GetImagesResponse>> result) {
+        result.subscribe(r -> addSubmitTokenOf(TASK_10),
+                         e -> {});
+    }
+
+    @AfterReturning("execution(public void pl.sdacademy.domain.image.DeleteImageService.deleteImage(..))")
+    public void task11Completed() {
+        addSubmitTokenOf(TASK_11);
     }
 
     private void addSubmitTokenOf(Task task) {
