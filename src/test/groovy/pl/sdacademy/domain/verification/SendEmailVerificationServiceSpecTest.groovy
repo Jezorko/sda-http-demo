@@ -10,9 +10,9 @@ import static rx.Observable.just
 
 class SendEmailVerificationServiceSpecTest extends Specification {
 
-    def authorizationFacade = Mock(AuthorizationFacade)
-    def emailService = Mock(EmailSendingService)
-    def verificationCodeRepository = Mock(EmailVerificationCodeRepository)
+    def authorizationFacade = Mock AuthorizationFacade
+    def emailService = Mock EmailSendingService
+    def verificationCodeRepository = Mock EmailVerificationCodeRepository
     def verificationCodeGenerator = Mock VerificationCodeGenerator
     def service = new SendEmailVerificationService(authorizationFacade, emailService, verificationCodeRepository, verificationCodeGenerator)
 
