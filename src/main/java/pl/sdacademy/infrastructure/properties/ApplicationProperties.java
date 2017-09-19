@@ -13,4 +13,5 @@ import static java.lang.Boolean.FALSE;
 @ConfigurationProperties(prefix = "application")
 public class ApplicationProperties {
     private Boolean debugEnabled = FALSE;
+    private String imagesStoragePath;
 }

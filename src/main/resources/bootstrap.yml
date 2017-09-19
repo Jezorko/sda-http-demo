@@ -1,6 +1,10 @@
 server:
     port: 8080
 spring:
+    http:
+        multipart:
+            max-file-size: 128KB
+            max-request-size: 128KB
     application:
         name: sda-http-demo
     profiles:
@@ -22,6 +26,7 @@ spring:
         password: ThisIsATest
 application:
     debug-enabled: true
+    images-storage-path: images
 client:
     username: sda
     password: demo

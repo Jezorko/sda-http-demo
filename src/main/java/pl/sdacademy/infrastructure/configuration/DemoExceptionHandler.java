@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import pl.sdacademy.domain.shared.ApiResponseOnException;
 import pl.sdacademy.domain.shared.ApiResponseOnValidation;
@@ -42,6 +44,20 @@ public class DemoExceptionHandler {
     @ExceptionHandler(InternalServer500Exception.class)
     public ApiResponseOnException internalServer500(InternalServer500Exception exception) {
         return apiResponseBuilder.buildFrom(exception);
+    }
+
+    @ResponseBody
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ApiResponseOnException multipartError(MethodArgumentTypeMismatchException exception) {
+        return apiResponseBuilder.buildFrom(INVALID_MULTIPART_REQUEST);
+    }
+
+    @ResponseBody
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(MultipartException.class)
+    public ApiResponseOnException multipartError(MultipartException exception) {
+        return apiResponseBuilder.buildFrom(INVALID_MULTIPART_REQUEST);
     }
 
     @ResponseBody
