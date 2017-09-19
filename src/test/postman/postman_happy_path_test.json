@@ -390,7 +390,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\":\"pawelfiu@gmail.com\"\n}"
+					"raw": "{\n\t\"email\":\"test@sdacademy.pl\"\n}"
 				},
 				"description": ""
 			},
@@ -781,6 +781,450 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n\t\"token\": \"{{tasks.7.token}}\",\n\t\"submitToken\": \"{{tasks.7.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetEighthTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/8",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.8.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "UploadTestFile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var id = JSON.parse(responseBody).id;",
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.8.submitToken\", submitToken);",
+							"}",
+							"",
+							"if (id !== null) {",
+							"    postman.setEnvironmentVariable(\"image.id\", id);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/users/images",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----SdaHttpDemoBoundary1234567890",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test.png\"\r\nContent-Type: image/png\r\n\r\nthis is a test file\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"public\";\r\n\r\nfalse\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"tags\";\r\n\r\nsda, demo\r\n\r\n------SdaHttpDemoBoundary1234567890--"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveEighthTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.9.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/8",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.8.token}}\",\n\t\"submitToken\": \"{{tasks.8.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetNinethTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/9",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.9.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetTestFile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.9.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/users/images/{{image.id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test.png\"\r\nContent-Type: image/png\r\n\r\nthis is a test file\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"public\";\r\n\r\nfalse\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"tags\";\r\n\r\nsda, demo\r\n\r\n------SdaHttpDemoBoundary1234567890--"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveNinethTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.10.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/9",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.9.token}}\",\n\t\"submitToken\": \"{{tasks.9.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetTenthTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/10",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.10.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetTestFilesByTag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.10.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/users/images?size=3&tags=sda",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"images"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tags",
+							"value": "sda",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test.png\"\r\nContent-Type: image/png\r\n\r\nthis is a test file\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"public\";\r\n\r\nfalse\r\n\r\n------SdaHttpDemoBoundary1234567890\r\nContent-Disposition: form-data; name=\"tags\";\r\n\r\nsda, demo\r\n\r\n------SdaHttpDemoBoundary1234567890--"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveTenthTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.11.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/10",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.10.token}}\",\n\t\"submitToken\": \"{{tasks.10.submitToken}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetEleventhTask",
+			"request": {
+				"url": "http://localhost:8080/tasks/11",
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-task-token",
+						"value": "{{tasks.11.token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTestFile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var submitToken = postman.getResponseHeader(\"x-task-submit-token\");",
+							"",
+							"if (submitToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.11.submitToken\", submitToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/users/images/40",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic c2RhOmRlbW8=",
+						"description": ""
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "{{auth.token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SolveEleventhTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var nextTaskToken = JSON.parse(responseBody).nextTaskToken;",
+							"",
+							"if (nextTaskToken !== null) {",
+							"    postman.setEnvironmentVariable(\"tasks.12.token\", nextTaskToken);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/tasks/11",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "pl",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{tasks.11.token}}\",\n\t\"submitToken\": \"{{tasks.11.submitToken}}\"\n}"
 				},
 				"description": ""
 			},
